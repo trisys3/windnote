@@ -15,7 +15,7 @@ function homePage() {
   webpack(bundler, () => {
     // watch all hot update files in the compilation folder
     const hotUpdWatch = watch('*.hot-update.json', {
-      cwd: `${process.cwd()}/frontend/${options.env}`,
+      cwd: `${__dirname}/${options.env}`,
       // ignore hidden files
       ignored: /^\./,
     });
@@ -39,11 +39,11 @@ function homePage() {
 
     if(ctx.path === '/' || ctx.path === '/index.html') {
       ctx.type = 'html';
-      ctx.body = readFileSync(`${process.cwd()}/frontend/${options.env}/index.html`, 'utf-8');
+      ctx.body = readFileSync(`${__dirname}/${options.env}/index.html`, 'utf-8');
     }
     else {
       ctx.type = mime.lookup(ctx.path);
-      ctx.body = readFileSync(`${process.cwd()}/frontend/${options.env}/${ctx.path}`, 'utf-8');
+      ctx.body = readFileSync(`${__dirname}/${options.env}/${ctx.path}`, 'utf-8');
     }
 
     return next();

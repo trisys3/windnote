@@ -1,10 +1,10 @@
 'use strict';
 
 export default findRoutes;
-import frontend from './frontend';
+import notes from './notes';
 
 function findRoutes() {
-  const root = frontend();
+  const root = notes();
 
   return (ctx, next) => root(ctx, next);
 }
