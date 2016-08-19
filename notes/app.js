@@ -1,6 +1,6 @@
 // connect to the home SocketIO namespace
 import io from 'socket.io-client';
-const socket = io(`${document.location.origin}`);
+const socket = io(__dirname);
 
 import './app.styl';
 

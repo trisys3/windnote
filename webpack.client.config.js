@@ -8,12 +8,12 @@ import {lint, minify, options} from './config';
 
 export default {
   entry: {
-    app: `${process.cwd()}/frontend/app.js`,
+    app: `${__dirname}/app.js`,
   },
   output: {
     filename: '[name].[hash].js',
     chunkFilename: '[name].[hash].[chunkhash].js',
-    path: `frontend/${options.env}`,
+    path: `${__dirname}/${options.env}`,
     pathinfo: options.env === 'development',
   },
   module: {
@@ -80,7 +80,7 @@ export default {
   plugins: [
     new HMR(),
     new IndexHtml({
-      template: `${process.cwd()}/frontend/index.html`,
+      template: `${__dirname}/index.html`,
       inject: true,
       minify: minify.html,
     }),

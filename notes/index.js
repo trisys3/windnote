@@ -1,21 +1,31 @@
 'use strict';
 
+import IndexHtml from 'html-webpack-plugin';
 import webpack from 'webpack';
 import {watch} from 'chokidar';
+import {resolve} from 'path';
 import {readFileSync} from 'fs';
 import mime from 'mime';
 import bundler from '../webpack.client.config';
-import {socket, options} from '../config';
+import {socket, options, minify} from '../config';
 import {green} from 'chalk';
 
-export default homePage;
+export default notesPage;
 
-function homePage() {
+function notesPage() {
+  bundler.entry.app = `${process.cwd()}/${__dirname}/app.js`;
+  bundler.output.path = `${process.cwd()}/notes/${options.env}`;
+  bundler.plugins[1] = new IndexHtml({
+    template: `${__dirname}/index.html`,
+    inject: true,
+    minify: minify.html,
+  });
+
   // compile the module with webpack
   webpack(bundler, () => {
     // watch all hot update files in the compilation folder
     const hotUpdWatch = watch('*.hot-update.json', {
-      cwd: `${__dirname}/${options.env}`,
+      cwd: `${process.cwd()}/${__dirname}/${options.env}`,
       // ignore hidden files
       ignored: /^\./,
     });
@@ -32,18 +42,25 @@ function homePage() {
   });
 
   return (ctx, next) => {
+    if(!resolve(ctx.path).match(/^\/notes/)) {
+      return next();
+    }
+
     // we only deal with GET requests here
     if(ctx.method !== 'GET') {
       return next();
     }
 
-    if(ctx.path === '/' || ctx.path === '/index.html') {
+    const path = resolve(ctx.path);
+
+    if(path === '/notes' || path === '/notes/index.html') {
       ctx.type = 'html';
       ctx.body = readFileSync(`${__dirname}/${options.env}/index.html`, 'utf-8');
     }
     else {
-      ctx.type = mime.lookup(ctx.path);
-      ctx.body = readFileSync(`${__dirname}/${options.env}/${ctx.path}`, 'utf-8');
+      const notesPath = path.replace(/^\/notes/, '');
+      ctx.type = mime.lookup(notesPath);
+      ctx.body = readFileSync(`${__dirname}/${options.env}/${notesPath}`, 'utf-8');
     }
 
     return next();

@@ -124,7 +124,6 @@ exports.rules = {
   'linebreak-style': [2, 'unix'],
   'new-cap': 2,
   'new-parens': 2,
-  'newline-after-var': 2,
   'newline-per-chained-call': [2, {
     ignoreChainWithDepth: 3,
   }],
