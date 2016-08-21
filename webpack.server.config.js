@@ -97,8 +97,7 @@ if(process.argv[1] === __filename) {
 
             return newServer;
           });
-      }
-      else {
+      } else {
         console.log(red('No usable assets found. Either you did not specify any entry points in JavaScript or compilable to JavaScript, or you have an error in your entry point(s).'));
       }
     });

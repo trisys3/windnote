@@ -14,8 +14,7 @@ yargs = yargs
       configParser: configPath => {
         try {
           return JSON.parse(stripJsonComments(readFileSync(configPath, 'utf8')));
-        }
-        catch(e) {
+        } catch(e) {
           // the file probably just does not exist, which is perfectly fine
           // for us, so we'll just pass an empty object
           return {};

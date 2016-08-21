@@ -92,7 +92,7 @@ exports.rules = {
   // style
   'array-bracket-spacing': 2,
   'block-spacing': [2, 'never'],
-  'brace-style': [2, 'stroustrup'],
+  'brace-style': 2,
   camelcase: 2,
   'comma-style': 2,
   'computed-property-spacing': [2, 'never'],

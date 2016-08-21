@@ -42,25 +42,18 @@ function notesPage() {
   });
 
   return (ctx, next) => {
-    if(!resolve(ctx.path).match(/^\/notes/)) {
-      return next();
-    }
-
     // we only deal with GET requests here
     if(ctx.method !== 'GET') {
       return next();
     }
 
     const path = resolve(ctx.path);
-
-    if(path === '/notes' || path === '/notes/index.html') {
+    if(path === '/' || path === '/index.html') {
       ctx.type = 'html';
       ctx.body = readFileSync(`${__dirname}/${options.env}/index.html`, 'utf-8');
-    }
-    else {
-      const notesPath = path.replace(/^\/notes/, '');
-      ctx.type = mime.lookup(notesPath);
-      ctx.body = readFileSync(`${__dirname}/${options.env}/${notesPath}`, 'utf-8');
+    } else {
+      ctx.type = mime.lookup(path);
+      ctx.body = readFileSync(`${__dirname}/${options.env}/${path}`, 'utf-8');
     }
 
     return next();
