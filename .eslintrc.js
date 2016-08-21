@@ -1,9 +1,10 @@
 'use strict';
 
+exports.parser = 'babel-eslint';
+
 // EcmaScript 6/7
 exports.parserOptions = {
   ecmaVersion: 7,
-  sourceType: 'module',
   ecmaFeatures: {
     jsx: true,
     experimentalObjectRestSpread: true,
@@ -90,7 +91,7 @@ exports.rules = {
   'no-unused-vars': 2,
 
   // style
-  'array-bracket-spacing': 2,
+  'babel/array-bracket-spacing': 2,
   'block-spacing': [2, 'never'],
   'brace-style': 2,
   camelcase: 2,
@@ -122,7 +123,7 @@ exports.rules = {
     },
   }],
   'linebreak-style': [2, 'unix'],
-  'new-cap': 2,
+  'babel/new-cap': 2,
   'new-parens': 2,
   'newline-per-chained-call': [2, {
     ignoreChainWithDepth: 3,
@@ -137,7 +138,7 @@ exports.rules = {
   'no-trailing-spaces': 2,
   'no-unneeded-ternary': 2,
   'no-whitespace-before-property': 2,
-  'object-curly-spacing': 2,
+  'babel/object-curly-spacing': 2,
   'operator-assignment': 2,
   'operator-linebreak': 2,
   'padded-blocks': [2, 'never'],
@@ -155,15 +156,15 @@ exports.rules = {
 
   // ECMAScript 6/7
   'arrow-body-style': 2,
-  'arrow-parens': [2, 'as-needed'],
+  'babel/arrow-parens': [2, 'as-needed'],
   'constructor-super': 2,
-  'generator-star-spacing': 2,
+  'babel/generator-star-spacing': 2,
   'no-const-assign': 2,
   'no-dupe-class-members': 2,
   'no-new-symbol': 2,
   'no-this-before-super': 2,
   'no-var': 2,
-  'object-shorthand': 2,
+  'babel/object-shorthand': 2,
   'prefer-arrow-callback': 2,
   'prefer-const': 2,
   'prefer-rest-params': 2,
