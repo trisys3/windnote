@@ -13,6 +13,7 @@ exports.parserOptions = {
 
 exports.plugins = [
   'babel',
+  'react',
 ];
 
 // environments
@@ -172,4 +173,30 @@ exports.rules = {
   'prefer-template': 2,
   'template-curly-spacing': 2,
   'yield-star-spacing': 2,
+
+  // React
+  'react/no-deprecated': 2,
+  'react/no-danger-with-children': 2,
+  'react/no-did-mount-set-state': 2,
+  'react/no-did-update-set-state': 2,
+  'react/no-direct-mutation-state': 2,
+  'react/react-in-jsx-scope': 2,
+  'react/require-render-return': 2,
+  'react/self-closing-comp': 2,
+
+  // JSX
+  'react/jsx-boolean-value': 2,
+  'react/jsx-closing-bracket-location': 2,
+  'react/jsx-curly-spacing': 2,
+  'react/jsx-equals-spacing': 2,
+  'react/jsx-indent-props': 2,
+  'react/jsx-no-comment-textnodes': 2,
+  'react/jsx-no-duplicate-props': 2,
+  'react/jsx-no-literals': 2,
+  'react/jsx-no-target-blank': 2,
+  'react/jsx-no-undef': 2,
+  'react/jsx-pascal-case': [2, {allowAllCaps: true}],
+  'react/jsx-space-before-closing': 2,
+  'react/jsx-uses-react': 2,
+  'react/jsx-uses-vars': 2,
 };

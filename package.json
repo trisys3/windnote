@@ -78,6 +78,7 @@
     "babel-plugin-transform-react-jsx": "^6.7.4",
     "babel-plugin-transform-runtime": "^6.6.0",
     "jasmine": "^2.4.1",
+    "marked": "^0.3.6",
     "strip-json-comments": "^2.0.1",
     "stylint": "^1.5.6"
   },

@@ -41,10 +41,10 @@ function notesPage() {
     });
   });
 
-  return (ctx, next) => {
+  return async (ctx, next) => {
     // we only deal with GET requests here
     if(ctx.method !== 'GET') {
-      return next();
+      await next();
     }
 
     const path = resolve(ctx.path);
@@ -56,6 +56,6 @@ function notesPage() {
       ctx.body = readFileSync(`${__dirname}/${options.env}/${path}`, 'utf-8');
     }
 
-    return next();
+    await next();
   };
 }
