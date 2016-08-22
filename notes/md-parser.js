@@ -3,13 +3,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class MdParser extends React.Component {
-  render() {
-    return <div />;
-  }
+function MdInput() {
+  return <div />;
+}
+
+function MdOutput() {
+  return <div />;
+}
+
+function MdParser() {
+  return <div>
+    <MdInput />
+    <MdOutput />
+  </div>;
 }
 
 ReactDOM.render(
     <MdParser />,
-    document.querySelector('md-output'),
+    document.querySelector('md-parser'),
 );

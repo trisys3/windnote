@@ -2,6 +2,7 @@
 import io from 'socket.io-client';
 const socket = io(__dirname);
 
+import './md-parser';
 import './app.styl';
 
 if(module.hot) {
