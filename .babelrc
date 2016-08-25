@@ -17,10 +17,10 @@
     "transform-exponentiation-operator",
 
     // ES7 Stage 2
+    "transform-class-properties",
     "transform-object-rest-spread",
 
     // ES7 Stage 1
-    "transform-class-properties",
     "transform-export-extensions",
 
     // ES7 Stage 0

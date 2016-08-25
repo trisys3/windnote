@@ -180,7 +180,6 @@ exports.rules = {
   'react/no-did-mount-set-state': 2,
   'react/no-did-update-set-state': 2,
   'react/no-direct-mutation-state': 2,
-  'react/prefer-stateless-function': 2,
   'react/react-in-jsx-scope': 2,
   'react/require-render-return': 2,
   'react/self-closing-comp': 2,
