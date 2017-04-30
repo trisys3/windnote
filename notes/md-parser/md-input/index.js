@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import './app.styl';
+import './app.css';
 
 export function MdInput() {
   return <md-input>

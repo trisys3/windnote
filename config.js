@@ -21,7 +21,7 @@ yargs = yargs
         }
       },
       description: 'Path to a file with all default configuration options. Defaults to ".koakarc", in the style of common Linux & node utilities\' configuration file paths. Comments are stripped out.',
-      default: '.koakarc',
+      default: '.windnoterc',
     },
   });
 
@@ -29,10 +29,10 @@ yargs = yargs
 // configuration but that aother arguments may depend on
 yargs = yargs
   .options({
-    env: {
+    nodeEnv: {
       type: 'string',
       description: 'Server\'s phase of development',
-      default: process.env.NODE_ENV || 'development',
+      default: 'development',
     },
   });
 
@@ -67,6 +67,18 @@ yargs = yargs
       description: 'Offset port for the port the test client is using to connect from the Vagrant or Docker virtual machine to the server, defaulting to no offset.',
       default: 0,
     },
+    quiet: {
+      type: 'boolean',
+      alias: 'q',
+      description: 'Suppress output. If \'verbose\' is set, lowers it by 1.',
+      default: 'false',
+    },
+    verbose: {
+      type: 'number',
+      alias: 'v',
+      description: 'Show more output. If \'quiet\' is set, this is lowered by 1.',
+      default: 0,
+    },
   });
 
 // 2nd-level configuration, that depends on the 1st-level configuration
@@ -98,20 +110,9 @@ yargs = yargs
     },
   });
 
-exports.options = yargs.argv;
+module.exports = yargs.argv;
 
-const lint = {};
 const minify = {};
-
-lint.js = {
-
-};
-lint.css = {
-
-};
-lint.html = {
-  'href-style': true,
-};
 
 minify.urls = {
   /* eslint camelcase: 0 */
@@ -138,38 +139,13 @@ minify.html = {
   removeStyleLinkTypeAttributes: true,
   removeOptionalTags: true,
   // lint: lint.html,
-  minifyJS: minify.js,
-  minifyCSS: minify.css,
+  // minifyJS: minify.js,
+  // minifyCSS: minify.css,
   minifyURLs: minify.urls,
 };
 
 // basic application information
 // get the webpack configuration
-Object.assign(exports, {minify, lint});
-
-// Content-Security-Policy configuration
-exports.csp = {
-  // by default only allow connections from our sites
-  'default-src': ["'self'"],
-  // only allow JavaScript code from our sites
-  'script-src': ["'self'"],
-  // only allow CSS styles from our sites
-  'style-src': ["'self'", 'blob:'],
-  // only allow images from our sites and data-uri's
-  'img-src': ["'self'", 'data:'],
-  // only allow partial-page connections (XHR, WebSockets, etc.) from our
-  // sites
-  'connect-src': ["'self'", `ws://${yargs.argv.hostname}:${yargs.argv.clientPort}`],
-  // only allow fonts from our sites
-  'font-src': ["'self'"],
-  // do not allow Flash on our sites
-  'object-src': ["'none'"],
-  // do not allow embedding of <iframe>s in our sites
-  'frame-src': ["'none'"],
-  // only allow video & audio from our sites
-  'media-src': ["'self'"],
-  // URL to send reports of violations to
-  'report-uri': ['/csp-report'],
-};
+Object.assign(exports, {minify});
 
 exports.socket = new Sockets();

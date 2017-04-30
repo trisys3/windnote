@@ -3,17 +3,29 @@
 'use strict';
 
 const red = require('chalk').red;
-const path = require('path');
-const pkg = require(`${process.cwd()}/package.json`);
+const {join, extname} = require('path');
+const pkg = require(join(process.cwd(), 'package.json'));
 const webpack = require('webpack');
-const options = require('./config').options;
+const options = require('./config');
 
 const deps = Object.assign({}, pkg.dependencies, pkg.devDependencies);
 const nodeModules = {};
 
-for(const dep in deps) {
+for(const dep of Object.keys(deps)) {
   nodeModules[dep] = `commonjs ${dep}`;
 }
+
+const loaders = [{
+  test: /\.node$/,
+  loader: 'node-loader',
+}, {
+  test: /\.js$/,
+  exclude: /node_modules/,
+  loader: 'babel-loader',
+  options: {
+    cacheDirectory: true,
+  },
+}];
 
 const config = {
   entry: {
@@ -22,33 +34,21 @@ const config = {
   output: {
     filename: '[name].[hash].js',
     chunkFilename: '[name].[hash].[chunkhash].js',
-    path: `${process.cwd()}/dist`,
-    pathinfo: options.env === 'development',
+    path: `${__dirname}/dist`,
+    pathinfo: options.nodeEnv === 'development',
     libraryTarget: 'commonjs2',
   },
   module: {
-    loaders: [{
-      test: /\.node$/,
-      loader: 'node',
-    }, {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        cacheDirectory: true,
-      },
-    }, {
-      test: /\.json$/,
-      loader: 'json',
-    }],
-    resolve: {
-      extensions: ['', '.js', '.json'],
-    },
+    rules: loaders,
+  },
+  resolve: {
+    extensions: ['.js', '.json'],
   },
   target: 'node',
   externals: nodeModules,
   plugins: [
-    new webpack.BannerPlugin('require("source-map-support").install();', {
+    new webpack.BannerPlugin({
+      banner: 'require("source-map-support").install();',
       raw: true,
       entryOnly: false,
     }),
@@ -68,8 +68,7 @@ const config = {
 Object.assign(exports, config);
 
 if(process.argv[1] === __filename) {
-  let servers = [];
-
+  const servers = [];
   webpack(config)
     .watch({}, (err, stats) => {
       const assets = Object.keys(stats.compilation.assets);
@@ -79,26 +78,30 @@ if(process.argv[1] === __filename) {
         return;
       }
 
-      if(assets.filter(allEntries => path.extname(allEntries) === '.js').length) {
-        servers = assets.map(asset => `${outputFolder}/${asset}`)
-          .filter(allEntries => path.extname(allEntries) === '.js')
-          .map((entry, entryIndex) => {
-            const newServer = require(entry);
-
-            if(servers.length) {
-              const prevServer = servers[entryIndex];
-
-              if(prevServer) {
-                prevServer.stop();
-              }
-            }
-
-            newServer.serve();
-
-            return newServer;
-          });
-      } else {
+      if(!assets.filter(allEntries => extname(allEntries) === '.js').length) {
         console.log(red('No usable assets found. Either you did not specify any entry points in JavaScript or compilable to JavaScript, or you have an error in your entry point(s).'));
+        process.exit();
       }
+
+      const newServers = assets.map(asset => `${outputFolder}/${asset}`)
+        .filter(allEntries => extname(allEntries) === '.js')
+        .map(entry => {
+          const newServer = require(entry);
+
+          if(servers.length) {
+            // assume only 1 server per watch
+            const prevServer = servers[servers.length - 1];
+
+            if(prevServer) {
+              prevServer.stop();
+            }
+          }
+
+          newServer.serve();
+
+          return newServer;
+        });
+
+      servers.push(...newServers);
     });
 }

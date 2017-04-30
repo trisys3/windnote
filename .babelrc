@@ -1,49 +1,46 @@
 {
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "current",
+      },
+    }],
+    "stage-3",
+    "stage-2",
+    "stage-1",
+    "stage-0",
+  ],
   "plugins": [
-    /* Transform Plugins */
-    // ES6 syntax that is not supported by Google Chrome, NodeJS, Webpack AND
-    // Firefox
-    "transform-es2015-destructuring",
-    "transform-es2015-modules-commonjs",
-    "transform-es2015-parameters",
-    "transform-es2015-sticky-regex",
-    "transform-es2015-template-literals",
-
     // React
     "transform-react-jsx",
-
-    // ES7 Stage 3
-    "transform-async-to-generator",
-    "transform-exponentiation-operator",
-
-    // ES7 Stage 2
-    "transform-class-properties",
-    "transform-object-rest-spread",
-
-    // ES7 Stage 1
-    "transform-export-extensions",
-
-    // ES7 Stage 0
-    "transform-do-expressions",
-    "transform-function-bind",
-
-    /* Syntax Plugins */
-    // ES7 Stage 2
-    "syntax-trailing-function-commas",
   ],
+
   "ignore": [
     "node_modules",
   ],
-  "sourceMaps": "inline",
   "env": {
     "development": {
       "plugins": [
         "transform-runtime",
+
+        // React
+        "transform-react-display-name",
+        "transform-react-jsx-self",
       ],
     },
     "production": {
+      "presets": [
+        "babili",
+      ],
+
       "plugins": [
+        // minification
+        "transform-inline-environment-variables",
+        "transform-node-env-inline",
+
+        // React
         "transform-react-constant-elements",
+        "transform-react-inline-elements",
       ],
     },
   },
