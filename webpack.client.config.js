@@ -1,4 +1,3 @@
-import IndexHtml from 'html-webpack-plugin';
 import {HotModuleReplacementPlugin as HMR} from 'webpack';
 
 import options from './config';
@@ -54,7 +53,7 @@ const loaders = [{
         importLoaders: 1,
         minimize: false,
         import: false,
-        // modules:true,
+        modules: true,
       },
     },
     'postcss-loader',
@@ -84,13 +83,11 @@ const loaders = [{
 }];
 
 export default {
-  entry: {
-    app: `${__dirname}/app.js`,
-  },
+  entry: {},
   output: {
-    filename: '[name].[hash].js',
-    chunkFilename: '[name].[hash].[chunkhash].js',
-    path: `${__dirname}/${options.nodeEnv}`,
+    filename: '[name]/[hash]/app.js',
+    chunkFilename: '[name]/[hash].[chunkhash].js',
+    path: `${process.cwd()}/dist`,
     pathinfo: options.nodeEnv === 'development',
   },
   module: {
@@ -103,8 +100,5 @@ export default {
   devtool: 'source-map',
   plugins: [
     new HMR(),
-    new IndexHtml({
-      template: 'index.html',
-    }),
   ],
 };
