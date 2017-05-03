@@ -90,9 +90,11 @@ if(process.argv[1] === __filename) {
 
 function serve() {
   // log some general information about the application
-  console.log(green(`Application ${cyan(options.name)}, port ${gray(options.port)} started at ${red(new Date())}`));
-  console.log(green(`Environment: ${magenta(options.nodeEnv)}`));
-  console.log(green(`Hostname(s): ${cyan(options.hostname)}`));
+  console.log(green('Application'), cyan(options.name),
+    green('port'), gray(options.port), green('started at'),
+    red(new Date()));
+  console.log(green('Environment:'), magenta(options.nodeEnv));
+  console.log(green('Hostname(s):'), cyan(options.hostname));
 
   // have all server components listen
   app.listen(options.port);
