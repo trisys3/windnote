@@ -9,11 +9,16 @@ import {readFile, writeFile} from 'fs';
 import cheerio from 'cheerio';
 
 import bundler from './webpack.client.config';
-import {socket} from './server';
+
+// watch all hot update files in the compilation folder
+const hotUpdWatch = watch('dist/**.hot-update.json', {
+  cwd: `${process.cwd()}/dist`,
+  // ignore hidden files
+  ignored: /^\./,
+});
 
 const routes = {notes: ''};
 
-// export default routes.map(({name = '', src = ''}) => {
 export default Object.entries(routes).map(([name, src]) => {
   const app = new Koa();
   const cwd = `${process.cwd()}/${name}/`;
@@ -27,16 +32,20 @@ export default Object.entries(routes).map(([name, src]) => {
     app.use(route);
   } catch(err) {}
 
-  // if(typeof route === 'function') {
-  //   app.use(route());
-  // }
+  return socket => {
+    socket.on('connection', io => {
+      // whenever a hot-update file gets created, emit a hot-update
+      // event to all sockets already connected to this page
+      hotUpdWatch.on('add', () => {
+        console.log(green('bundle changed'));
+        io.emit('hot-update');
+      });
+    });
 
-  app.use(serve(`dist/${name}/`));
-
-  return mount(`/${src}`, app);
+    app.use(serve(`dist/${name}/`));
+    return mount(`/${src}`, app);
+  };
 });
-
-let hotUpdWatch;
 
 // compile the module with webpack
 webpack(bundler, (err, stats) => {
@@ -64,8 +73,8 @@ webpack(bundler, (err, stats) => {
     version: false,
   });
 
-  console.log(green('Compilation'), blue(hash),
-    green('finished in'), gray(`${time} ms`));
+  console.log(green('Bundle'), blue(hash), green('finished in'),
+    gray(`${time} ms`));
 
   if(stats.hasErrors()) {
     console.error(errors);
@@ -105,25 +114,4 @@ webpack(bundler, (err, stats) => {
       });
     });
   }
-
-  if(hotUpdWatch) {
-    console.log(green('Closing previous webpack compilation...'));
-    hotUpdWatch.close();
-  }
-
-  // watch all hot update files in the compilation folder
-  hotUpdWatch = watch('**.hot-update.json', {
-    cwd: `${process.cwd()}/dist`,
-    // ignore hidden files
-    ignored: /^\./,
-  });
-
-  socket.on('connection', io => {
-    // whenever a hot-update file gets created, emit a hot-update
-    // event to all sockets already connected to this page
-    hotUpdWatch.on('add', () => {
-      console.log(green('File changed'));
-      io.emit('hot-update');
-    });
-  });
 });

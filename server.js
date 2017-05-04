@@ -74,14 +74,15 @@ server.use(logger({
 server.use(helmet());
 server.use(csp(cspConf));
 
-for(const route of routes) {
-  server.use(route);
-}
-
 // create a NodeJS server with the content of our koa application
 const app = createServer(server.callback());
 
 export {serve, stop, socket};
+
+for(const route of routes) {
+  // TODO: pass the exact room/namespace
+  server.use(route(socket));
+}
 
 if(process.argv[1] === __filename) {
   // if we are the called file, start the server
