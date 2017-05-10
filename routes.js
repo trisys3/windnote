@@ -10,12 +10,7 @@ import cheerio from 'cheerio';
 
 import bundler from './webpack.client.config';
 
-// watch all hot update files in the compilation folder
-const hotUpdWatch = watch('dist/**.hot-update.json', {
-  cwd: `${process.cwd()}/dist`,
-  // ignore hidden files
-  ignored: /^\./,
-});
+const hotUpdWatch = {};
 
 const routes = {notes: ''};
 
@@ -27,20 +22,22 @@ export default Object.entries(routes).map(([name, src]) => {
   // expose as a library for other bundles to use
   bundler.output.library = name;
 
+  hotUpdWatch[name] = watch(`${name}/**.json`, {
+    cwd: 'dist',
+    ignored: /^\./,
+  })
+    .on('add', () => console.log('bundle changed'));
+
   try {
     const route = require(`./${name}/`);
     app.use(route);
   } catch(err) {}
 
   return socket => {
-    socket.on('connection', io => {
-      // whenever a hot-update file gets created, emit a hot-update
-      // event to all sockets already connected to this page
-      hotUpdWatch.on('add', () => {
-        console.log(green('bundle changed'));
-        io.emit('hot-update');
-      });
-    });
+    // whenever a hot-update file gets created, emit a hot-update
+    // event to all sockets already connected to this page
+    socket.on('connection', io => hotUpdWatch[name].on('add', () =>
+      io.emit('hot-update')));
 
     app.use(serve(`dist/${name}/`));
     return mount(`/${src}`, app);
@@ -106,9 +103,11 @@ webpack(bundler, (err, stats) => {
 
       const baseHtml = $.html();
 
+      // write the original HTML to the base of the bundle folder...
       writeFile(indexHash, indexHtml, () => {
         // do nothing, just need the callback
       });
+      // and add the hash to the <base> in the hash folder
       writeFile(indexBase, baseHtml, () => {
         // do nothing, just need the callback
       });
