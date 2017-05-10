@@ -84,7 +84,7 @@ for(const route of routes) {
   server.use(route(socket));
 }
 
-if(process.argv[1] === __filename) {
+if(process.argv[1] === `${__dirname}/${__filename}`) {
   // if we are the called file, start the server
   serve();
 }
