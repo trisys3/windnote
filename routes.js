@@ -1,10 +1,10 @@
-import {join} from 'path';
 import webpack from 'webpack';
 import {watch} from 'chokidar';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import serve from 'koa-static';
 import {green, blue, gray} from 'chalk';
+import IndexHtml from 'html-webpack-plugin';
 import {readFile, writeFile} from 'fs';
 import cheerio from 'cheerio';
 
@@ -21,6 +21,12 @@ export default Object.entries(routes).map(([name, src]) => {
   bundler.entry[name] = `${cwd}/app.js`;
   // expose as a library for other bundles to use
   bundler.output.library = name;
+  bundler.plugins.push(new IndexHtml({
+    template: `${cwd}/index.html`,
+    filename: `${name}/index.html`,
+    chunks: [name],
+    inject: false,
+  }));
 
   hotUpdWatch[name] = watch(`${name}/**.json`, {
     cwd: 'dist',
@@ -45,7 +51,9 @@ export default Object.entries(routes).map(([name, src]) => {
 });
 
 // compile the module with webpack
-webpack(bundler, (err, stats) => {
+const bundle = webpack(bundler);
+
+bundle.watch({}, (err, stats) => {
   if(err) {
     console.error(err.stack || err);
     if(err.details) {
@@ -83,32 +91,18 @@ webpack(bundler, (err, stats) => {
   }
 
   for(const entry of Object.keys(entrypoints)) {
-    const indexSrc = `${entry}/index.html`;
-    const indexHash = `dist/${entry}/${hash}/index.html`;
-    const indexBase = `dist/${entry}/index.html`;
+    const indexFile = `dist/${entry}/index.html`;
 
-    readFile(indexSrc, (err, indexHtml) => {
+    readFile(indexFile, (err, indexHtml) => {
       const $ = cheerio.load(indexHtml);
 
-      let base = $('head base');
-      if(!base.length) {
-        $('head').append('<base />');
-        base = $('head base');
-      }
+      const baseFolder = $('base').attr('href') || '';
 
-      // use the original path
-      const baseBase = base.attr('href') || '';
-      // we need a trailing slash here for some reason
-      base.attr('href', join(baseBase, hash, '/'));
+      $(`[entry=${entry}]`).attr('src', `${baseFolder}/${hash}/app.js`);
 
-      const baseHtml = $.html();
+      indexHtml = $.html();
 
-      // write the original HTML to the base of the bundle folder...
-      writeFile(indexHash, indexHtml, () => {
-        // do nothing, just need the callback
-      });
-      // and add the hash to the <base> in the hash folder
-      writeFile(indexBase, baseHtml, () => {
+      writeFile(indexFile, indexHtml, () => {
         // do nothing, just need the callback
       });
     });
