@@ -87,6 +87,8 @@ export default {
   output: {
     filename: '[name]/[hash]/app.js',
     chunkFilename: '[name]/[hash].[chunkhash].js',
+    hotUpdateMainFilename: 'hot-update/[hash].json',
+    hotUpdateChunkFilename: 'hot-update/[id].[hash].json',
     path: `${process.cwd()}/dist`,
     pathinfo: options.nodeEnv === 'development',
   },

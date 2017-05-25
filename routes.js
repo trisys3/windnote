@@ -1,5 +1,4 @@
 import webpack from 'webpack';
-import {watch} from 'chokidar';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import serve from 'koa-static';
@@ -8,9 +7,8 @@ import IndexHtml from 'html-webpack-plugin';
 import {readFile, writeFile} from 'fs';
 import cheerio from 'cheerio';
 
+import {socket} from './server';
 import bundler from './webpack.client.config';
-
-const hotUpdWatch = {};
 
 const routes = {notes: ''};
 
@@ -28,26 +26,15 @@ export default Object.entries(routes).map(([name, src]) => {
     inject: false,
   }));
 
-  hotUpdWatch[name] = watch(`${name}/**.json`, {
-    cwd: 'dist',
-    ignored: /^\./,
-  })
-    .on('add', () => console.log('bundle changed'));
-
   try {
     const route = require(`./${name}/`);
     app.use(route);
   } catch(err) {}
 
-  return socket => {
-    // whenever a hot-update file gets created, emit a hot-update
-    // event to all sockets already connected to this page
-    socket.on('connection', io => hotUpdWatch[name].on('add', () =>
-      io.emit('hot-update')));
-
+  return (() => {
     app.use(serve(`dist/${name}/`));
     return mount(`/${src}`, app);
-  };
+  });
 });
 
 // compile the module with webpack
@@ -80,6 +67,7 @@ bundle.watch({}, (err, stats) => {
 
   console.log(green('Bundle'), blue(hash), green('finished in'),
     gray(`${time} ms`));
+  socket.emit('hot-update');
 
   if(stats.hasErrors()) {
     console.error(errors);

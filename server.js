@@ -6,6 +6,8 @@ import compress from 'koa-compress';
 import helmet, {contentSecurityPolicy as csp} from 'koa-helmet';
 import {createServer} from 'http';
 import Sockets from 'socket.io';
+import serveStatic from 'koa-static';
+import mount from 'koa-mount';
 
 const socket = new Sockets();
 
@@ -71,18 +73,23 @@ server.use(logger({
 }));
 
 // add certain headers for protection
-server.use(helmet());
+server.use(helmet({noSniff: false}));
 server.use(csp(cspConf));
-
-// create a NodeJS server with the content of our koa application
-const app = createServer(server.callback());
 
 export {serve, stop, socket};
 
 for(const route of routes) {
   // TODO: pass the exact room/namespace
-  server.use(route(socket));
+  server.use(route());
 }
+
+const hotUpdRoutes = new Koa();
+hotUpdRoutes.use(serveStatic('dist/hot-update'));
+server.use(mount('/hot-update', hotUpdRoutes));
+
+// create a NodeJS server with the content of our koa application
+const app = createServer(server.callback());
+socket.listen(app);
 
 if(process.argv[1] === `${__dirname}/${__filename}`) {
   // if we are the called file, start the server
@@ -99,12 +106,10 @@ function serve() {
 
   // have all server components listen
   app.listen(options.port);
-  socket.listen(app);
 }
 
 function stop() {
   console.log(green(`Application ${cyan(options.name)}, port ${gray(options.port)} stopped at ${red(new Date())}`));
 
   app.close();
-  socket.close();
 }
