@@ -3,20 +3,22 @@ import io from 'socket.io-client';
 const socket = io(__dirname);
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {render} from 'react-dom';
 
 import {MdParser} from './md-parser';
 import './app.css';
 
 if(module.hot) {
   module.hot.accept();
-  socket.on('hot-update', () => {
-    module.hot.check((err, mods) => {
-      if(mods) {
-        module.hot.apply();
-      }
-    });
+
+  module.hot.accept('./md-parser', () => {
+    const MdContainer = require('./md-parser').default;
+    render(<MdContainer />, document.querySelector('notes-parser'));
+  });
+
+  socket.once('hot-update', () => {
+    module.hot.check(true);
   });
 }
 
-ReactDOM.render(<MdParser />, document.querySelector('notes-parser'));
+render(<MdParser />, document.querySelector('notes-parser'));
