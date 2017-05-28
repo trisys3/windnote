@@ -35,17 +35,18 @@ minify.html = {
 
 export {minify};
 
-const loaders = [{
+const jsLoader = {
   test: /\.js$/,
   exclude: /node_modules/,
   loader: 'babel-loader',
   options: {
     cacheDirectory: true,
   },
-}, {
+};
+
+const cssLoader = {
   test: /\.css$/,
   use: [
-    'style-loader',
     {
       loader: 'css-loader',
       options: {
@@ -58,7 +59,21 @@ const loaders = [{
     },
     'postcss-loader',
   ],
-}, {
+};
+
+if(process.env.nodeEnv === 'production') {
+  cssLoader.use.unshift({
+    loader: 'file-loader',
+    options: {
+      name: '[name].[ext]',
+    },
+  },
+  'extract',);
+} else {
+  cssLoader.use.unshift('style-loader');
+}
+
+const imgLoader = {
   test: /\.(png|jpe?g|gif|svg)$/i,
   use: [{
     loader: 'img-loader',
@@ -71,16 +86,28 @@ const loaders = [{
       name: '[sha512:hash].[ext]',
     },
   }],
-}, {
+};
+
+const htmlLoader = {
   test: /\.html$/,
   loader: 'html-loader',
   options: {
     minimize: true,
   },
-}, {
+};
+
+const textLoader = {
   test: /\.txt$/,
   loader: 'raw-loader',
-}];
+};
+
+const loaders = [
+  jsLoader,
+  cssLoader,
+  imgLoader,
+  htmlLoader,
+  textLoader,
+];
 
 export default {
   entry: {},
