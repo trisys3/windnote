@@ -4,6 +4,18 @@ import React from 'react';
 
 import './app.css';
 
-export function MdOutput(props) {
-  return <md-output hidden={props.hidden} />;
+export class MdOutput extends React.Component {
+  render() {
+    const outputHtml = {__html: this.output};
+    return <md-output hidden={this.hidden} dangerouslySetInnerHTML={outputHtml} />;
+  }
+
+  componentWillMount() {
+    const {hidden, children: output} = this.props;
+    Object.assign(this, {hidden, output});
+  }
+
+  componentWillReceiveProps({hidden, children: output}) {
+    Object.assign(this, {hidden, output});
+  }
 }

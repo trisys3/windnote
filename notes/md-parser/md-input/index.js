@@ -4,8 +4,8 @@ import React from 'react';
 
 import './app.css';
 
-export function MdInput() {
+export function MdInput({onReparse}) {
   return <md-input>
-    <textarea autoComplete="on" placeholder="My notes" />
+    <textarea onInput={onReparse} autoComplete="on" placeholder="My notes" />
   </md-input>;
 }
