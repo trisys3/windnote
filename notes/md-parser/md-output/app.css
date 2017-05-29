@@ -1,4 +1,7 @@
 md-output {
+  padding: 5px;
+  color: wheat;
+
   &[hidden] {
     display: none;
   }
