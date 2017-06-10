@@ -1,4 +1,4 @@
-// connect to the home SocketIO namespace
+import 'react-hot-loader/patch';
 import {AppContainer} from 'react-hot-loader';
 import io from 'socket.io-client';
 const socket = io(__dirname);

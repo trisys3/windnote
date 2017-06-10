@@ -16,10 +16,7 @@ export default Object.entries(routes).map(([name, src]) => {
   const app = new Koa();
   const cwd = `${process.cwd()}/${name}/`;
 
-  bundler.entry[name] = [
-    'react-hot-loader/patch',
-    `${cwd}/app.js`,
-  ];
+  bundler.entry[name] = `${cwd}/app.js`;
   // expose as a library for other bundles to use
   bundler.output.library = name;
   bundler.plugins.push(new IndexHtml({
