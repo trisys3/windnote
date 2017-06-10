@@ -1,6 +1,8 @@
 md-output {
+  display: block;
   padding: 5px;
   color: wheat;
+  font-size: 1.25em;
 
   &[hidden] {
     display: none;
