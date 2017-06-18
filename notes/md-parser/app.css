@@ -1,20 +1,12 @@
 md-parser {
   width: 100%;
+  height: 100%;
   display: flex;
-  flex-wrap: wrap;
-
-  & > header {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 }
 
 md-input {
-  flex-grow: 1;
-  height: 100%;
   margin-right: 5px;
+  width: 100%;
 
   & > textarea {
     width: 100%;
@@ -23,8 +15,8 @@ md-input {
 }
 
 md-output {
-  flex-grow: 1;
   overflow-y: auto;
   overflow-wrap: break-word;
-  max-height: 50%;
+  width: 100%;
+  border: 1px solid white;
 }

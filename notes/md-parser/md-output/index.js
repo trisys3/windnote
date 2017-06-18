@@ -4,7 +4,7 @@ import React from 'react';
 
 import './app.css';
 
-export class MdOutput extends React.Component {
+export default class MdOutput extends React.Component {
   render() {
     const outputHtml = {__html: this.output};
     return <md-output hidden={this.hidden} dangerouslySetInnerHTML={outputHtml} />;

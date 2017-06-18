@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export class MdDesc extends Component {
+export default class MdDesc extends Component {
   constructor() {
     super();
     this.state = {};

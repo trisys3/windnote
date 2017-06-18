@@ -7,11 +7,21 @@ import React from 'react';
 import {render} from 'react-dom';
 
 import MdParser from './md-parser';
+import MdDesc from '../md-desc';
 import './app.css';
 
-const notesParser = document.querySelector('notes-parser');
-const reactReload = () => render(<AppContainer>
+const NotesPage = () => <notes-parser>
+  <header>
+    <h1>{'WindNote - Write like the wind!'}</h1>
+    <MdDesc />
+  </header>
+
   <MdParser />
+</notes-parser>;
+
+const notesParser = document.querySelector('notes-page');
+const reactReload = () => render(<AppContainer>
+  <NotesPage />
 </AppContainer>, notesParser);
 
 reactReload();
