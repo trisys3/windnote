@@ -52,6 +52,7 @@ server.name = options.name;
 // set the phase of development for the app
 server.env = options.nodeEnv;
 
+// CSP endpoint
 server.use(({request: req, path, method, response: res}, next) => {
   if(method !== 'POST' || path !== '/csp-report') {
     return next();

@@ -1,28 +1,27 @@
-notes-parser {
+md-parser {
   width: 100%;
-  margin: 5px;
   display: flex;
+  flex-wrap: wrap;
 
-  & md-parser {
+  & > header {
+    width: 100%;
+  }
+}
+
+md-input {
+  flex-grow: 1;
+  height: 100%;
+  margin-right: 5px;
+
+  & > textarea {
     width: 100%;
     height: 100%;
-    display: flex;
   }
+}
 
-  & md-input {
-    width: 50%;
-    height: 100%;
-    margin-right: 5px;
-
-    & > textarea {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  & md-output {
-    overflow-y: auto;
-    overflow-wrap: break-word;
-    max-height: 50%;
-  }
+md-output {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  max-height: 50%;
 }
