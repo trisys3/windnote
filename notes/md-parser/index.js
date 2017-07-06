@@ -3,7 +3,6 @@ import marked from 'marked';
 
 import MdInput from './md-input';
 import MdOutput from './md-output';
-// import {MdDesc} from '../../md-desc';
 
 import './app.css';
 
