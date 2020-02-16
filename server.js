@@ -17,7 +17,7 @@ const cspConf = {
     // by default only allow connections from our sites
     defaultSrc: ["'self'"],
     // only allow JavaScript code from our sites
-    scriptSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'"],
     // only allow CSS styles from our sites
     styleSrc: ["'self'", 'blob:'],
     // only allow images from our sites and data-uri's
@@ -30,7 +30,7 @@ const cspConf = {
     // do not allow Flash on our sites
     objectSrc: ["'none'"],
     // do not allow embedding of <iframe>s in our sites
-    childSrc: ["'none'"],
+    frameSrc: ["'none'"],
     // only allow video & audio from our sites
     mediaSrc: ["'self'"],
     // URL to send reports of violations to
@@ -38,6 +38,10 @@ const cspConf = {
   },
   reportOnly: true,
 };
+
+if(process.env.NODE_ENV === 'development') {
+  cspConf.directives.styleSrc.push("'unsafe-inline'");
+}
 
 // first-party components
 import options from './config';
