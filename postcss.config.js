@@ -1,11 +1,11 @@
 'use strict';
 
-const cssnext = require('postcss-preset-env');
+const env = require('postcss-preset-env');
 const cssImport = require('postcss-import');
 const nano = require('cssnano');
 
 exports.plugins = [
   cssImport(),
-  cssnext(),
+  env({stage: 0}),
   nano(),
 ];
