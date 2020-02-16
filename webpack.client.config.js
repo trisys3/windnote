@@ -52,7 +52,6 @@ const cssLoader = {
       options: {
         sourceMap: true,
         importLoaders: 1,
-        minimize: false,
         import: false,
         modules: true,
       },
@@ -110,6 +109,7 @@ const loaders = [
 ];
 
 export default {
+  mode: options.nodeEnv,
   entry: {},
   output: {
     filename: '[name]/[hash]/app.js',

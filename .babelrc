@@ -1,14 +1,13 @@
 {
   "presets": [
-    ["env", {
+    ["@babel/env", {
       "targets": {
         "node": "current",
       },
+      "useBuiltIns": "usage",
+      "corejs": {"version": 3, "proposals": true},
+      "shippedProposals": true,
     }],
-    "stage-3",
-    "stage-2",
-    "stage-1",
-    "stage-0",
   ],
   "plugins": [
     // React
@@ -21,8 +20,6 @@
   "env": {
     "development": {
       "plugins": [
-        "transform-runtime",
-
         // React
         "transform-react-display-name",
         "transform-react-jsx-self",
@@ -30,7 +27,8 @@
     },
     "production": {
       "presets": [
-        "babili",
+        "minify",
+        {"builtIns": false},
       ],
 
       "plugins": [

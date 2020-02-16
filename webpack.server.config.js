@@ -2,7 +2,7 @@
 
 'use strict';
 
-const red = require('chalk').red;
+const {red, blue, green, cyan, gray, yellow} = require('chalk');
 const {join, extname} = require('path');
 const pkg = require(join(process.cwd(), 'package.json'));
 const webpack = require('webpack');
@@ -28,13 +28,14 @@ const loaders = [{
 }];
 
 const config = {
+  mode: options.nodeEnv,
   entry: {
-    index: `${__dirname}/server.js`,
+    server: './server.js',
   },
   output: {
-    filename: '[name].[hash].js',
-    chunkFilename: '[name].[hash].[chunkhash].js',
-    path: `${__dirname}/dist`,
+    filename: '[name].js',
+    chunkFilename: 'chunks/[chunkhash]/chunk.js',
+    path: `${process.cwd()}/dist`,
     pathinfo: options.nodeEnv === 'development',
     libraryTarget: 'commonjs2',
   },
@@ -75,7 +76,50 @@ if(process.argv[1] === __filename) {
       const outputFolder = stats.compilation.outputOptions.path;
 
       if(err) {
+        console.error(err.stack || err);
+        if(err.details) {
+          console.error(err.details);
+        }
         return;
+      }
+
+      const {hash, time, warnings, errors, entrypoints: entryData} = stats.toJson({
+        assets: false,
+        cached: false,
+        cachedAssets: false,
+        children: false,
+        chunks: false,
+        chunkModules: false,
+        chunkOrigins: false,
+        modules: false,
+        publicPath: false,
+        reasons: false,
+        source: false,
+        version: false,
+        colors: true,
+      });
+
+      const entries = Object.keys(entryData);
+      const entryList = entries.join(', ');
+
+      let timeStr = `${time}ms`;
+      if(time >= 1000) {
+        const secStr = (time / 1000).toFixed(1);
+        const sec = Number(secStr);
+        timeStr = `${sec}s`;
+      }
+
+      console.log(green(blue(hash),
+        `(${cyan(entryList)})`,
+        'bundled in',
+        gray(timeStr)));
+
+      if(stats.hasErrors()) {
+        console.error(red(errors));
+      }
+
+      if(stats.hasWarnings()) {
+        console.warn(yellow(warnings));
       }
 
       if(!assets.filter(allEntries => extname(allEntries) === '.js').length) {

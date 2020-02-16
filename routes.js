@@ -27,8 +27,8 @@ export default Object.entries(routes).map(([name, src]) => {
   }));
 
   try {
-    const route = require(`./${name}/`);
-    app.use(route);
+    // const route = require(`./${name}`);
+    // app.use(route);
   } catch(err) {}
 
   return (() => {
