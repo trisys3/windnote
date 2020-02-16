@@ -12,6 +12,7 @@ const presets = exports.presets = [
 const plugins = exports.plugins = [
   // React
   '@babel/transform-react-jsx',
+  'react-hot-loader/babel',
 ];
 
 exports.ignore = ['node_modules'];

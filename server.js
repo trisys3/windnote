@@ -17,9 +17,9 @@ const cspConf = {
     // by default only allow connections from our sites
     defaultSrc: ["'self'"],
     // only allow JavaScript code from our sites
-    scriptSrc: ["'self'", "'unsafe-inline'"],
+    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
     // only allow CSS styles from our sites
-    styleSrc: ["'self'", 'blob:'],
+    styleSrc: ["'self'", 'blob:', "'unsafe-inline'"],
     // only allow images from our sites and data-uri's
     imgSrc: ["'self'", 'data:'],
     // only allow partial-page connections (XHR, WebSockets, etc.) from our
@@ -38,10 +38,6 @@ const cspConf = {
   },
   reportOnly: true,
 };
-
-if(process.env.NODE_ENV === 'development') {
-  cspConf.directives.styleSrc.push("'unsafe-inline'");
-}
 
 // first-party components
 import options from './config';
