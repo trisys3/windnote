@@ -1,8 +1,10 @@
 const textboxStyles = {
   backgroundColor: 'wheat',
   fontFamily: 'inherit',
+  fontSize: '1.25em',
   flexGrow: 1,
   border: 'none',
+  padding: 5,
   width: 0,
   resize: 'none',
 };

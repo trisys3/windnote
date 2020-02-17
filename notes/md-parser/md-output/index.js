@@ -6,6 +6,7 @@ const outputStyles = {
   flexGrow: 1,
   border: '1px solid white',
   padding: 5,
+  width: 0,
 };
 
 /** @jsx jsx */
