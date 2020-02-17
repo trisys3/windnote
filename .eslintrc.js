@@ -4,23 +4,15 @@ exports.parser = 'babel-eslint';
 
 // EcmaScript 6/7
 exports.parserOptions = {
-  ecmaVersion: 7,
-  ecmaFeatures: {
-    jsx: true,
-    experimentalObjectRestSpread: true,
-  },
+  ecmaVersion: 11,
+  sourceType: 'module',
+  ecmaFeatures: {jsx: true},
 };
 
-exports.plugins = [
-  'babel',
-  'react',
-];
+exports.plugins = ['babel', 'react', 'import'];
 
 // environments
-exports.env = {
-  es6: true,
-  node: true,
-};
+exports.env = {es2020: true, node: true};
 
 // individual rules
 exports.rules = {
@@ -106,21 +98,11 @@ exports.rules = {
   'key-spacing': 2,
   'keyword-spacing': [2, {
     overrides: {
-      for: {
-        after: false,
-      },
-      if: {
-        after: false,
-      },
-      while: {
-        after: false,
-      },
-      switch: {
-        after: false,
-      },
-      catch: {
-        after: false,
-      },
+      for: {after: false},
+      if: {after: false},
+      while: {after: false},
+      switch: {after: false},
+      catch: {after: false},
     },
   }],
   'linebreak-style': [2, 'unix'],
@@ -155,7 +137,7 @@ exports.rules = {
   'spaced-comment': [2, 'always'],
   'wrap-regex': 2,
 
-  // ECMAScript 6/7
+  // ECMAScript 6, etc.
   'arrow-body-style': 2,
   'babel/arrow-parens': [2, 'as-needed'],
   'constructor-super': 2,

@@ -1,27 +1,32 @@
-import React, {Component} from 'react';
+const parserStyles = {
+  flexGrow: 1,
+  display: 'flex',
+};
+
+const inputStyles = {marginRight: 5};
+
+import {useState} from 'react';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 import marked from 'marked';
 
 import MdInput from './md-input';
 import MdOutput from './md-output';
 
-import './app.css';
+export default function MdParser() {
+  const [output = '', setOutput] = useState();
 
-export default class MdParser extends Component {
-  constructor() {
-    super();
-    this.state = {};
+  return <div css={parserStyles}>
+    <MdInput css={inputStyles} onReparse={onReparse} />
+    <MdOutput>{output}</MdOutput>
+  </div>;
+
+  function onReparse({target: {value: input}}) {
+    setInput(input);
   }
 
-  render() {
-    return <md-parser>
-      <MdInput onReparse={({target: {value: input}}) => this.setInput(input)} />
-      <MdOutput>{this.state.output || ''}</MdOutput>
-    </md-parser>;
-  }
-
-  setInput(input = '') {
+  function setInput(input = '') {
     const mdHtml = marked(input, {breaks: true});
-    this.setState({output: mdHtml});
+    setOutput(mdHtml);
   }
 }
-

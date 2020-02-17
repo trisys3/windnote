@@ -1,10 +1,17 @@
-'use strict';
+const outputStyles = {
+  color: 'wheat',
+  fontSize: '1.25em',
+  overflowY: 'auto',
+  overflowWrap: 'break-word',
+  flexGrow: 1,
+  border: '1px solid white',
+  padding: 5,
+};
 
-import React from 'react';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 
-import './app.css';
-
-export default function MdOutput({children: output, hidden}) {
+export default function MdOutput({className: outerClass, children: output}) {
   const outputHtml = {__html: output};
-  return <md-output hidden={hidden} dangerouslySetInnerHTML={outputHtml} />;
+  return <div className={outerClass} css={outputStyles} dangerouslySetInnerHTML={outputHtml} />;
 }

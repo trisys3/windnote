@@ -13,6 +13,7 @@ const plugins = exports.plugins = [
   // React
   '@babel/transform-react-jsx',
   'react-hot-loader/babel',
+  'emotion',
 ];
 
 exports.ignore = ['node_modules'];

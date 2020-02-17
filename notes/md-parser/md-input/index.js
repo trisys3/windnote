@@ -1,11 +1,15 @@
-'use strict';
+const textboxStyles = {
+  backgroundColor: 'wheat',
+  fontFamily: 'inherit',
+  flexGrow: 1,
+  border: 'none',
+  width: 0,
+  resize: 'none',
+};
 
-import React from 'react';
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 
-import './app.css';
-
-export default function MdInput({onReparse}) {
-  return <md-input>
-    <textarea onInput={onReparse} autoComplete="on" placeholder="My notes" />
-  </md-input>;
+export default function MdInput({className: outerClass, onReparse}) {
+  return <textarea className={outerClass} css={textboxStyles} onInput={onReparse} autoComplete="on" placeholder="My notes" />;
 }
